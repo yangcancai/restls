@@ -76,7 +76,26 @@ impl TLSCodec {
             self.cursor = 0;
         }
     }
+///
+/// 记录协议TSLPlaintext包的长度
+/// TLSPlaintext.length = ((self.buf[self.cursor + 3] as usize) << 8 | self.buf[self.cursor + 4] as usize)
+/// TotalLenght = 1(type)+2(version)+2(lenght)+TLSPlaintext.length(fragment);
+/// struct {
+/// uint8 major, minor;
+/// } ProtocolVersion;
 
+/// enum {
+/// change_cipher_spec(20), alert(21), handshake(22),
+/// application_data(23), (255)
+/// } ContentType;
+
+/// struct {
+/// ContentType type;
+/// ProtocolVersion version;
+/// uint16 length;
+/// opaque fragment[TLSPlaintext.length];
+/// } TLSPlaintext;
+/// /// 
     fn peek_record_length(&self) -> usize {
         5 + ((self.buf[self.cursor + 3] as usize) << 8 | self.buf[self.cursor + 4] as usize)
     }

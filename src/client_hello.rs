@@ -66,6 +66,42 @@ impl ClientHello {
         key_share
     }
 
+///
+///  enum {
+///  hello_request(0), client_hello(1), server_hello(2),
+///  certificate(11), server_key_exchange (12),
+///  certificate_request(13), server_hello_done(14),
+///  certificate_verify(15), client_key_exchange(16),
+///  finished(20), (255)
+///  } HandshakeType;
+///  
+///  struct {
+///  HandshakeType msg_type; /* handshake type */
+///  uint24 length; /* bytes in message */
+///  select (HandshakeType) {
+///  case hello_request: HelloRequest;
+///  case client_hello: ClientHello;
+///  case server_hello: ServerHello;
+///  case certificate: Certificate;
+///  case server_key_exchange: ServerKeyExchange;
+///  case certificate_request: CertificateRequest;
+///  case server_hello_done: ServerHelloDone;
+///  case certificate_verify: CertificateVerify;
+///  case client_key_exchange: ClientKeyExchange;
+///  case finished: Finished;
+///  } body;
+///  } Handshake;
+/// 
+/// enum { null(0), (255) } CompressionMethod;
+
+/// struct {
+///     ProtocolVersion client_version;
+///     Random random; - 4
+///     SessionID session_id; - 4
+///     CipherSuite cipher_suites<2..2^16-2>;
+///     CompressionMethod compression_methods<1..2^8-1>;
+///     Extension extensions<8..2^16-1>;
+///     } ClientHello;
     pub(crate) fn parse(buf: &mut Cursor<&[u8]>, id: usize) -> Result<ClientHello> {
         debug!("[{}]parsing client hello: {}", id, buf.remaining());
 
