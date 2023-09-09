@@ -126,9 +126,9 @@ impl ClientHello {
             return Err(anyhow!("reject: session id should be exactly 32 bytes"));
         }
 
-        skip_length_padded::<2, _>(buf); // cipher suites
-        skip_length_padded::<1, _>(buf); // compression methods
-        buf.advance(2); // Extensions Length
+        skip_length_padded::<2, _>(buf); // cipher suites 2字节
+        skip_length_padded::<1, _>(buf); // compression methods 1字节
+        buf.advance(2); // Extensions Length tls 1.3 RFC 8446  有该字段，tls 1.0没有该字段
 
         let mut session_ticket = Vec::new();
         let mut client_supports_tls_13 = false;

@@ -78,6 +78,8 @@ impl TLSCodec {
     }
 ///
 /// 记录协议TSLPlaintext包的长度
+/// 解释第3和第4个buf是存放长度的两个字节
+/// A字节 << 8 | B字节 = 这两个字节转为number的长度
 /// TLSPlaintext.length = ((self.buf[self.cursor + 3] as usize) << 8 | self.buf[self.cursor + 4] as usize)
 /// TotalLenght = 1(type)+2(version)+2(lenght)+TLSPlaintext.length(fragment);
 /// struct {
@@ -95,7 +97,7 @@ impl TLSCodec {
 /// uint16 length;
 /// opaque fragment[TLSPlaintext.length];
 /// } TLSPlaintext;
-/// /// 
+/// 返回总的协议包的长度 
     fn peek_record_length(&self) -> usize {
         5 + ((self.buf[self.cursor + 3] as usize) << 8 | self.buf[self.cursor + 4] as usize)
     }
